@@ -1,5 +1,8 @@
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import './adaptive_button.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
@@ -16,7 +19,7 @@ class _NewTransactionState extends State<NewTransaction> {
   DateTime _selectedDate;
 
   void _submitData() {
-    if(_amountController.text.isEmpty) {
+    if (_amountController.text.isEmpty) {
       return;
     }
 
@@ -53,68 +56,66 @@ class _NewTransactionState extends State<NewTransaction> {
       setState(() {
         _selectedDate = datePicked;
       });
-      
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            TextField(
-              cursorColor: Colors.pink,
-              decoration: InputDecoration(labelText: 'Title'),
-              controller: _titleController,
-              onSubmitted: (_) => _submitData(),
-              /*onChanged: (value) {
-                      titleInput = value;
-                    },*/
-            ),
-            TextField(
-              cursorColor: Colors.orange,
-              decoration: InputDecoration(labelText: 'Amount'),
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              // Here, we need a value arg even if it's not used. The convention is to write an _ = not used arg
-              onSubmitted: (_) => _submitData(),
-              /*onChanged: (value) {
-                      amountInput = value;
-                    },*/
-            ),
-            Container(
-              height: 70,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      _selectedDate == null
-                          ? 'No date chosen.'
-                          : 'Picked date : ${DateFormat.yMMMMd().format(_selectedDate)}',
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      'Pick a date',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    textColor: Theme.of(context).primaryColor,
-                  )
-                ],
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: 10,
+              left: 10,
+              right: 10,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                cursorColor: Colors.pink,
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _titleController,
+                onSubmitted: (_) => _submitData(),
+                /*onChanged: (value) {
+                        titleInput = value;
+                      },*/
               ),
-            ),
-            FlatButton(
-              onPressed: _submitData,
-              color: Colors.teal,
-              child: Text('Add transaction'),
-              textColor: Colors.white,
-            ),
-          ],
+              TextField(
+                cursorColor: Colors.orange,
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                // Here, we need a value arg even if it's not used. The convention is to write an _ = not used arg
+                onSubmitted: (_) => _submitData(),
+                /*onChanged: (value) {
+                        amountInput = value;
+                      },*/
+              ),
+              Container(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No date chosen.'
+                            : 'Picked date : ${DateFormat.yMMMMd().format(_selectedDate)}',
+                      ),
+                    ),
+                    AdaptiveFlatButton('Pick a date', _presentDatePicker),
+                  ],
+                ),
+              ),
+              FlatButton(
+                onPressed: _submitData,
+                color: Colors.teal,
+                child: Text('Add transaction'),
+                textColor: Colors.white,
+              ),
+            ],
+          ),
         ),
       ),
     );
